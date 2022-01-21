@@ -1,4 +1,4 @@
-Desafio de Backend
+## Desafio de Backend - Digital Republic
 
 Seu objetivo é criar uma API REST com algumas funções essenciais relacionadas ao gerenciamento de contas bancárias;
 
