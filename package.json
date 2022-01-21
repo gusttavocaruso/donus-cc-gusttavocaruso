@@ -1,0 +1,20 @@
+{
+  "name": "donus-cc-gusttavocaruso",
+  "version": "1.0.0",
+  "description": "Back-end challenge to Digital Republic by gustavo caruso",
+  "main": "./src/api/server.js",
+  "scripts": {
+    "start": "nodemon .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Gustavo Caruso",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/joi": "^17.1.1",
+    "express": "^4.17.2",
+    "mongodb": "^4.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}

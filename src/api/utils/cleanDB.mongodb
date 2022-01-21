@@ -1,0 +1,2 @@
+// use accountManagement;
+db.accounts.drop();
