@@ -1,11 +1,11 @@
 {
   "name": "donus-cc-gusttavocaruso",
   "version": "1.0.0",
-  "description": "Back-end challenge to Digital Republic by gustavo caruso",
+  "description": "Back-end challenge to Digital Republic by Gustavo Caruso",
   "main": "./src/api/server.js",
   "scripts": {
     "start": "nodemon .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha ./src/tests/**/*$NAME*.test.js --exit"
   },
   "author": "Gustavo Caruso",
   "license": "ISC",
@@ -15,6 +15,11 @@
     "mongodb": "^4.3.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.15"
+    "chai": "^4.3.4",
+    "chai-http": "^4.3.0",
+    "mocha": "^9.1.4",
+    "mongodb-memory-server": "^6.9.6",
+    "nodemon": "^2.0.15",
+    "sinon": "^12.0.1"
   }
 }

@@ -9,13 +9,14 @@ const accEntriesValidation = (fullName, cpf) => {
   });
 
   const { error } = accSchema.validate({ fullName, cpf });
-  if(error) throw errHandle(400, 'Invalid account entries. Please, try again.');
+  if(error) throw errHandle(401,
+      'You\'ve set "name" or "cpf" incorrectly. Please, try again.');
 };
 
 const balanceAccountValidation = async (id, transfValue) => {
   const { balance } = await searchById(id);
   if(balance - transfValue < 0) throw errHandle(400,
-    `You can not transfer ${transfValue}. Your account dont have this value`);
+    `You could not transfer ${transfValue}. Your account dont have this value`);
 };
 
 const accAlreadyExists = async (cpf) => {
@@ -23,16 +24,25 @@ const accAlreadyExists = async (cpf) => {
   if(ussCpf) throw errHandle(409, 'Cpf already registered');
 };
 
-const valuesValidate = (value) => {
+const DepositValueValidate = (value) => {
   const valueOk = joi.number().min(0).max(2000).required();
 
   const { error } = valueOk.validate(value);
-  if(error) throw errHandle(400, 'Invalid value. Please, set other and try again');
+  if(error) throw errHandle(400,
+    `It is an invalid value to deposit. Only number-values under 2000 is allowed`);
+};
+
+const TransfValueValidate = (value) => {
+  const valueOk = joi.number().min(0).required();
+
+  const { error } = valueOk.validate(value);
+  if(error) throw errHandle(400, 'Invalid amount. Only positive-values must be transfer');
 };
 
 module.exports = {
   accAlreadyExists,
   accEntriesValidation,
-  valuesValidate,
+  DepositValueValidate,
+  TransfValueValidate,
   balanceAccountValidation,
 };

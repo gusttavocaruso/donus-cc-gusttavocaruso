@@ -10,7 +10,7 @@ const registerAccount = async (req, res, next) => {
       message: `Account has been created sucessfuly`,
       accountId })
   } catch (error) {
-    console.log(error.message);
+    // console.log(error.message);
     next(error);
   }
 };
@@ -34,7 +34,7 @@ const newDeposit = async (req, res, next) => {
     const { depositValue: dV } = depositData;
     return res.status(200).json({ message: `Value ${dV} has been deposited`})
   } catch (error) {
-    console.log(error.message);
+    // console.log(error.message);
     next(error);
   }
 };
@@ -43,7 +43,6 @@ const newTransfer = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { transfValue, accountDest } = req.body;
-
     await transferService(id, transfValue, accountDest);
 
     return res.status(200).json({
@@ -51,7 +50,7 @@ const newTransfer = async (req, res, next) => {
     });
 
   } catch (error) {
-    console.log(error.message);
+    // console.log(error.message);
     next(error);
   }
 };
