@@ -25,7 +25,7 @@ e também, as depêndencias de desenvolvimento:
 
 ## Para rodar esse projeto na sua máquina:
 - é necessário ter suporte para um pacote de dependencias como por exemplo `npm`,
-- é necessário ter instalado ou ter um container ativo de `mongodb` e estar com ele ativo.
+- é necessário ter instalado ou ter um container de `mongodb` e estar com ele ativo.
 
 - você deve clonar o projeto na sua máquina, acessar o diretório e instalar as depêndencias com o comando `npm install`,
 - para iniciar o servidor, com a instância do mongodb ativa, rode o comando `npm start`,
