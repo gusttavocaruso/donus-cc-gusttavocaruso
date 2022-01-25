@@ -12,3 +12,4 @@ const connection = () => mongodb.connect(MONGO_DB_URL, OPTIONS)
   });
 
 module.exports = connection;
+
