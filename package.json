@@ -4,7 +4,8 @@
   "description": "Back-end challenge to Digital Republic by Gustavo Caruso",
   "main": "./src/api/server.js",
   "scripts": {
-    "start": "nodemon .",
+    "start": "node ./src/api/server.js",
+    "dev": "nodemon .",
     "test": "mocha ./src/tests/**/*$NAME*.test.js --exit"
   },
   "author": "Gustavo Caruso",
