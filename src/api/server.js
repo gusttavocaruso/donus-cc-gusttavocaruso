@@ -8,7 +8,7 @@ app.use(router);
 app.use(errorMD);
 
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`On at :${PORT} port!`));
 
 module.exports = app;
