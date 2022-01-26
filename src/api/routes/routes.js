@@ -5,9 +5,8 @@ const { registerAccount, newDeposit, getAccounts,
 
 const router = Router();
 
-router.get('/', (_req, res, _next) => res.status(200).json({ message: 'hlwrd' }));
+router.get('/', getAccounts);
 router.post('/register', registerAccount);
-router.get('/accounts', getAccounts);
 router.put('/deposit', newDeposit);
 router.put('/transfer/:id', newTransfer);
 
