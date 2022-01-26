@@ -4,11 +4,11 @@ const { accountRegister, newDepositService, getAccountsService,
 const registerAccount = async (req, res, next) => {
   try {
     const userData = req.body;
-    const accountId = await accountRegister(userData);
+    const accountNumber = await accountRegister(userData);
 
     return res.status(201).json({
       message: `Account has been created sucessfuly`,
-      accountId })
+      accountNumber })
   } catch (error) {
     // console.log(error.message);
     next(error);
@@ -18,7 +18,6 @@ const registerAccount = async (req, res, next) => {
 const getAccounts = async (_req, res, next) => {
   try {
     const account = await getAccountsService();
-
     return res.status(200).json(account);
   } catch (error) {
     console.log(error.message);

@@ -10,11 +10,12 @@ const { expect } = chai;
 
 
 let connectionMock;
-before( async () => {
+before(async () => {
   connectionMock = await getConnection();
   sinon.stub(mongodb, 'connect').resolves(connectionMock);
 });
 after(() => { mongodb.connect.restore() });
+
 
 describe('1 - fullName e cpf são obrigatórios para abrir uma conta: ', () => {
   let response;
@@ -35,6 +36,7 @@ describe('1 - fullName e cpf são obrigatórios para abrir uma conta: ', () => {
       expect(response.body.message).to.be
         .equals('You\'ve set "name" or "cpf" incorrectly. Please, try again.');
     })
+
   });
 
   describe('Testa quando é informado um formato inválido de fullName', () => {
@@ -53,6 +55,7 @@ describe('1 - fullName e cpf são obrigatórios para abrir uma conta: ', () => {
       expect(response.body.message).to.be
         .equals('You\'ve set "name" or "cpf" incorrectly. Please, try again.');
     })
+
   });
 
   describe('Testa quando não é informado um cpf', () => {
@@ -71,6 +74,7 @@ describe('1 - fullName e cpf são obrigatórios para abrir uma conta: ', () => {
       expect(response.body.message).to.be
         .equals('You\'ve set "name" or "cpf" incorrectly. Please, try again.');
     })
+
   });
 
   describe('Testa quando é informado um formato inválido de cpf', () => {
@@ -89,9 +93,11 @@ describe('1 - fullName e cpf são obrigatórios para abrir uma conta: ', () => {
       expect(response.body.message).to.be
         .equals('You\'ve set "name" or "cpf" incorrectly. Please, try again.');
     })
+
   });
 
   describe('Testa quando são informados fullName e cpf em formatos válidos', () => {
+
     before(async () => {
       response = await chai.request(server)
         .post('/register')
@@ -108,6 +114,7 @@ describe('1 - fullName e cpf são obrigatórios para abrir uma conta: ', () => {
     it('A requisição deve retornar a mensagem: Account has been created sucessfuly', () => {
       expect(response.body.message).to.be.equals('Account has been created sucessfuly');
     })
+
   })
 
 });
@@ -134,10 +141,11 @@ describe('2 - Só é permitido uma conta por pessoa', () => {
     })
   })
 
-  describe('Testa quando um cpf já registrado tenta criar uma conta', () => {  
+  describe('Testa quando um cpf já registrado tenta criar uma conta', () => {
+
     before(async () => {
       const accountsMock = connectionMock
-        .db('accountManagement').collection('accounts');
+        .db('account_management').collection('accounts');
   
       await accountsMock.insertOne({
         fullName: 'Sabotage',
@@ -159,6 +167,7 @@ describe('2 - Só é permitido uma conta por pessoa', () => {
     it('A requisição deve retornar a mensagem: Cpf already registered', () => {
       expect(response.body.message).to.be.equals('Cpf already registered');
     })
+
   });
 
 });
@@ -179,7 +188,7 @@ describe('3 - É possível realizar depositos na conta. Por questão de seguran�
         .put('/deposit')
         .send({
           depositValue: 2000,
-          accountDest: accountMock.body.accountId,
+          accountDest: accountMock.body.accountNumber,
         });
     });
   
@@ -193,6 +202,7 @@ describe('3 - É possível realizar depositos na conta. Por questão de seguran�
   })
 
   describe('Testa quando é realizado um depósito > R$2.000', () => {
+
     before(async () => {
       const accountMock = await chai.request(server)
       .post('/register')
@@ -205,9 +215,9 @@ describe('3 - É possível realizar depositos na conta. Por questão de seguran�
         .put('/deposit')
         .send({
           depositValue: 2001,
-          accountDest: accountMock.body.accountId,
+          accountDest: accountMock.body.accountNumber,
         });
-      });
+    });
   
     it('Deve retornar o status 400', () => {
       expect(response).to.have.status(400);
@@ -216,6 +226,62 @@ describe('3 - É possível realizar depositos na conta. Por questão de seguran�
     it('A requisição deve retornar a mensagem: `It is an invalid value to deposit. Only number-values under 2000 is allowed`', () => {
       expect(response.body.message).to.be.equals(`It is an invalid value to deposit. Only number-values under 2000 is allowed`);
     })
+
+  })
+
+  describe('Testa quando não é informado um valor para depósito', () => {
+
+    before(async () => {
+      const accountMock = await chai.request(server)
+      .post('/register')
+      .send({
+        fullName: 'L. F. Pondé',
+        cpf: '01234567800',
+      });
+  
+      response = await chai.request(server)
+        .put('/deposit')
+        .send({
+          accountDest: accountMock.body.accountNumber,
+        });
+    });
+  
+    it('Deve retornar o status 400', () => {
+      expect(response).to.have.status(400);
+    })
+
+    it('A requisição deve retornar a mensagem: depositValue must be informed', () => {
+      expect(response.body.message).to.be.equals('depositValue must be informed')
+    })
+
+  })
+
+  describe('Testa quando não é informado uma conta para depósito', () => {
+
+    before(async () => {
+      const accountMock = await chai.request(server)
+      .post('/register')
+      .send({
+        fullName: 'M. S. Cortela',
+        cpf: '01234567899',
+      });
+  
+      response = await chai.request(server)
+        .put('/deposit')
+        .send({
+          depositValue: 2001,
+          accountDest: accountMock.body.accountNumber,
+        });
+    });
+  
+    it('Deve retornar o status 400', () => {
+      expect(response).to.have.status(400);
+    })
+
+    it('A requisição deve retornar a mensagem: accountDest must be informed', () => {
+      expect(response.body.message).to.be.equals('accountDest must be informed')
+    })
+
   })
 
 });
@@ -243,14 +309,14 @@ describe('4 - É possível realizar transferências gratuitas e ilimitadas entre
         .put('/deposit')
         .send({
           depositValue: 2000,
-          accountDest: accountMock1.body.accountId,
+          accountDest: accountMock1.body.accountNumber,
         });
 
       response = await chai.request(server)
-      .put(`/transfer/${accountMock1.body.accountId}`)
+      .put(`/transfer/${accountMock1.body.accountNumber}`)
       .send({
         transfValue: 2000,
-        accountDest: accountMock2.body.accountId,
+        accountDest: accountMock2.body.accountNumber,
       })
 
     });
@@ -285,14 +351,14 @@ describe('4 - É possível realizar transferências gratuitas e ilimitadas entre
         .put('/deposit')
         .send({
           depositValue: 10,
-          accountDest: accountMock1.body.accountId,
+          accountDest: accountMock1.body.accountNumber,
         });
 
       response = await chai.request(server)
-      .put(`/transfer/${accountMock1.body.accountId}`)
+      .put(`/transfer/${accountMock1.body.accountNumber}`)
       .send({
         transfValue: 10.5,
-        accountDest: accountMock2.body.accountId,
+        accountDest: accountMock2.body.accountNumber,
       })
 
     });

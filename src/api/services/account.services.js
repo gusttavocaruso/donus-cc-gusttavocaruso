@@ -1,6 +1,6 @@
 const { register, deposit, searchAccounts, transferBy,
   transferTo } = require('../models/account.models');
-const { accAlreadyExists, accEntriesValidation, DepositValueValidate,
+const { accAlreadyExists, accEntriesValidation, DepositEntriesValidate,
   balanceAccountValidation, TransfValueValidate } = require('../utils/validateFunc');
 
 const accountRegister = async ({ fullName, cpf }) => {
@@ -13,11 +13,15 @@ const accountRegister = async ({ fullName, cpf }) => {
 
 const getAccountsService = async () => {
   const accounts = await searchAccounts();
-  return accounts;
+  const accNumberField = accounts
+    .map(({ _id, fullName, cpf, balance }) => (
+      { accountNumber: _id, fullName, cpf, balance }
+    ));
+  return accNumberField;
 }
 
 const newDepositService = async ({ depositValue, accountDest }) => {
-  DepositValueValidate(depositValue);
+  DepositEntriesValidate(depositValue, accountDest);
 
   await deposit(depositValue, accountDest);
 };

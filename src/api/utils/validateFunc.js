@@ -24,9 +24,11 @@ const accAlreadyExists = async (cpf) => {
   if(ussCpf) throw errHandle(409, 'Cpf already registered');
 };
 
-const DepositValueValidate = (value) => {
-  const valueOk = joi.number().min(0).max(2000).required();
+const DepositEntriesValidate = (value, accountDest) => {
+  if(!value) throw errHandle(400, 'depositValue must be informed');
+  if(!accountDest) throw errHandle(400, 'accountDest must be informed');
 
+  const valueOk = joi.number().min(0).max(2000).required();
   const { error } = valueOk.validate(value);
   if(error) throw errHandle(400,
     `It is an invalid value to deposit. Only number-values under 2000 is allowed`);
@@ -42,7 +44,7 @@ const TransfValueValidate = (value) => {
 module.exports = {
   accAlreadyExists,
   accEntriesValidation,
-  DepositValueValidate,
+  DepositEntriesValidate,
   TransfValueValidate,
   balanceAccountValidation,
 };
