@@ -1,6 +1,8 @@
 <div align="center">
 
 # Desafio de Backend - Digital Republic
+  
+  <img src="https://media-exp1.licdn.com/dms/image/C4D0BAQEezQzUHoUtcA/company-logo_200_200/0/1625683637278?e=2159024400&v=beta&t=IkDZT_-SGgEJQeHI3Lb7PKhlfqWAoemj56tBrLKFDhw" />
 
 Esse repositório contém o código em linguagem Node.js com express, que dá origem a API REST criada por Gustavo Caruso para o teste técnico solicitado pela empresa Digital Republic.
 
