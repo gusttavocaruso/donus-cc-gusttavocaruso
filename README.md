@@ -97,7 +97,7 @@ e também, as depêndencias de desenvolvimento:
 - `sinon` - lib p/ teste,
 - `mongodb-memory-server@6` - lib que simula banco de dados p/ teste;
 
-## Para rodar esse projeto na sua máquina:
+### Para rodar esse projeto na sua máquina:
 - é necessário ter suporte para um pacote de dependencias como por exemplo `npm`,
 - é necessário ter instalado ou ter um container de `mongodb` e estar com ele ativo.
 
@@ -108,22 +108,22 @@ e também, as depêndencias de desenvolvimento:
 
 #
 
-<div align="center">
+<div align="left">
 
-# Solicitação do cliente:
+## Solicitação do cliente:
 
 Seu objetivo é criar uma API REST com algumas funções essenciais relacionadas ao gerenciamento de contas bancárias;
 
-  Para abrir uma conta é necessário apenas o nome completo e CPF da pessoa, mas só é permitido uma conta por pessoa;
+  - Para abrir uma conta é necessário apenas o nome completo e CPF da pessoa, mas só é permitido uma conta por pessoa;
 
-  Com essa conta é possível realizar transferências para outras contas e depositar;
+  - Com essa conta é possível realizar transferências para outras contas e depositar;
 
-  Não aceitamos valores negativos nas contas;
+  - Não aceitamos valores negativos nas contas;
 
-  Por questão de segurança cada transação de depósito não pode ser maior do que R$2.000;
+  - Por questão de segurança cada transação de depósito não pode ser maior do que R$2.000;
   
-  As transferências entre contas são gratuitas e ilimitadas;
+  - As transferências entre contas são gratuitas e ilimitadas;
 
-Em relação a banco de dados, quem decide é você mesmo.
+  - Em relação a banco de dados, quem decide é você mesmo.
 
 </div>
