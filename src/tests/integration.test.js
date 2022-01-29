@@ -119,6 +119,7 @@ describe('1 - fullName e cpf são obrigatórios para abrir uma conta: ', () => {
 
 });
 
+
 describe('2 - Só é permitido uma conta por pessoa', () => {
   let response;
 
@@ -171,6 +172,7 @@ describe('2 - Só é permitido uma conta por pessoa', () => {
   });
 
 });
+
 
 describe('3 - É possível realizar depositos na conta. Por questão de segurança cada transação de depósito não pode ser maior do que R$2.000', () => {
   let response;
@@ -285,6 +287,7 @@ describe('3 - É possível realizar depositos na conta. Por questão de seguran�
   })
 
 });
+
 
 describe('4 - É possível realizar transferências gratuitas e ilimitadas entre contas, porém, elas não devem ficar com valores negativos', () => {
   let response;
