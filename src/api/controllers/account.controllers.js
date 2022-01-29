@@ -1,4 +1,4 @@
-const { accountRegister, newDepositService, getAccountsService,
+const { accountRegister, newDepositService, getAccountsService, removeService,
   transferService } = require('../services/account.services');
 
 const registerAccount = async (req, res, next) => {
@@ -54,9 +54,23 @@ const newTransfer = async (req, res, next) => {
   }
 };
 
+const removeAccount = async (req, res, next) => {
+  try {
+    const { accountNumber } = req.body;
+    await removeService(accountNumber);
+
+    return res.status(200).json({
+      message: `Account ${accountNumber} has been closed sucessfully`});
+  } catch (error) {
+    console.log(error.message);
+    next(error);
+  }
+}
+
 module.exports = {
   registerAccount,
   newDeposit,
   getAccounts,
   newTransfer,
+  removeAccount,
 };

@@ -41,11 +41,16 @@ const TransfValueValidate = (value) => {
   if(error) throw errHandle(400, 'Invalid amount. Only positive-values must be transfer');
 };
 
+const validAccountId = (id) => {
+  const idOk = joi.string().length(24).required();
+  const { error } = idOk.validate(id);
+  return error;
+}
+
 const accountOrigValidate = async (accountOrig) => {
   if(!accountOrig) throw errHandle(400, 'You must set a account number');
   
-  const idOk = joi.string().length(24).required();
-  const { error } = idOk.validate(accountOrig);
+  const error = validAccountId(accountOrig);
   if(error) throw errHandle(400, 'You must set a valid account origin number');
 
   const accountExists = await searchById(accountOrig);
@@ -55,12 +60,24 @@ const accountOrigValidate = async (accountOrig) => {
 const accountDestValidate = async (accountDest) => {
   if(!accountDest) throw errHandle(400, 'You must set a account number');
   
-  const idOk = joi.string().length(24).required();
-  const { error } = idOk.validate(accountDest);
+  const error = validAccountId(accountDest);
   if(error) throw errHandle(400, 'You must set a valid account destiny number');
 
   const accountExists = await searchById(accountDest);
   if(!accountExists) throw errHandle(400, 'You must set a exists account destiny number');
+};
+
+const shuttingDownValidate = async (id) => {
+  if(!id) throw errHandle(400, 'You must set a account number');
+
+  const error = validAccountId(id);
+  if(error) throw errHandle(400, 'You must set a valid account number');
+
+  const account = await searchById(id);
+  if(!account) throw errHandle(400, 'You must set a exist account number.');
+
+  if(account.balance > 0) throw errHandle(400,
+    `You can not closure this account because there are ${account.balance}. Please, remove it all first`)
 };
 
 module.exports = {
@@ -71,4 +88,5 @@ module.exports = {
   balanceAccountValidation,
   accountOrigValidate,
   accountDestValidate,
+  shuttingDownValidate,
 };
