@@ -63,6 +63,19 @@ const accountDestValidate = async (accountDest) => {
   if(!accountExists) throw errHandle(400, 'You must set a exists account destiny number');
 };
 
+const shuttingDownValidate = async (id) => {
+  if(!id) throw errHandle(400, 'You must set a account number');
+
+  const idOk = joi.string().length(24).required();
+  const { error } = idOk.validate(id);
+  if(error) throw errHandle(400, 'You must set a valid account number');
+
+  const { balance } = await searchById(id);
+  if(!balance) throw errHandle(400, 'You must set a exist account number.');
+  if(balance > 0) throw errHandle(400,
+    `You can not closure this account because there are ${balance}. Please, remove it all first`)
+}
+
 module.exports = {
   accAlreadyExists,
   accEntriesValidation,
@@ -71,4 +84,5 @@ module.exports = {
   balanceAccountValidation,
   accountOrigValidate,
   accountDestValidate,
+  shuttingDownValidate,
 };
