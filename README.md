@@ -12,7 +12,7 @@ Esse repositório contém o código em linguagem Node.js com express e mongodb, 
 
 ## Informações para consumo da API:
 
-Esse projeto esta hospedado na plataforma <a target="_blank" href="https://www.heroku.com/">HEROKU</a> e pode ser acessado através <a target="_blank" href="https://dg-cc-gustacaru.herokuapp.com/">DESTE LINK</a>
+Esse projeto esta hospedado na plataforma <a href="https://www.heroku.com/" target="_blank">HEROKU</a> e pode ser acessado através <a href="https://dg-cc-gustacaru.herokuapp.com/" target="_blank">DESTE LINK</a>
 
 O Banco de dados utilizado é o <a target="_blank" href="https://www.mongodb.com/">MongoDB</a> e está hospedado no <a target="_blank" href="https://cloud.mongodb.com/">MongoCloud Atlas</a>
 
