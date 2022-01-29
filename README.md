@@ -1,6 +1,6 @@
 <div align="center">
 
-# Desafio de Backend - Digital Republic
+# Code Challenge Backend - Digital Republic
   
   <img width="100px" src="https://media-exp1.licdn.com/dms/image/C4D0BAQEezQzUHoUtcA/company-logo_200_200/0/1625683637278?e=2159024400&v=beta&t=IkDZT_-SGgEJQeHI3Lb7PKhlfqWAoemj56tBrLKFDhw" />
 
@@ -12,14 +12,14 @@ Esse repositório contém o código em linguagem Node.js com express e mongodb, 
 
 ## Informações para consumo da API:
 
-Esse projeto esta hospedado na plataforma <a href="https://www.heroku.com/">HEROKU</a> e pode ser acessado através <a href="https://dg-cc-gustacaru.herokuapp.com/">DESTE LINK</a>
+Esse projeto esta hospedado na plataforma <a target="_blank" href="https://www.heroku.com/">HEROKU</a> e pode ser acessado através <a target="_blank" href="https://dg-cc-gustacaru.herokuapp.com/">DESTE LINK</a>
 
-O Banco de dados utilizado é o <a href="https://www.mongodb.com/">MongoDB</a> e está hospedado no <a href="https://cloud.mongodb.com/">MongoCloud Atlas</a>
+O Banco de dados utilizado é o <a target="_blank" href="https://www.mongodb.com/">MongoDB</a> e está hospedado no <a target="_blank" href="https://cloud.mongodb.com/">MongoCloud Atlas</a>
 
 Esse projeto não tem front-end, por isso, para acessar todas as rotas utilize um client como 
-<a href="https://insomnia.rest/">Insomnia</a>, <a href="https://www.postman.com/">Postman</a> ou similar.
+<a target="_blank" href="https://insomnia.rest/">Insomnia</a>, <a target="_blank" href="https://www.postman.com/">Postman</a> ou similar.
 
-As rotas disponíveis são:
+As rotas disponíveis são: /accounts, /register, /deposit, /transfer/:id
 
   1. https://dg-cc-gustacaru.herokuapp.com/accounts - requisição HTTP: `GET` <br>
     Essa rota retorna as contas registradas no banco de dados e exibe um array de objetos em um formato como:
