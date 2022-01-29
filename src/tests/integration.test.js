@@ -119,7 +119,6 @@ describe('1 - fullName e cpf são obrigatórios para abrir uma conta: ', () => {
 
 });
 
-
 describe('2 - Só é permitido uma conta por pessoa', () => {
   let response;
 
@@ -172,7 +171,6 @@ describe('2 - Só é permitido uma conta por pessoa', () => {
   });
 
 });
-
 
 describe('3 - É possível realizar depositos na conta. Por questão de segurança cada transação de depósito não pode ser maior do que R$2.000', () => {
   let response;
@@ -287,7 +285,6 @@ describe('3 - É possível realizar depositos na conta. Por questão de seguran�
   })
 
 });
-
 
 describe('4 - É possível realizar transferências gratuitas e ilimitadas entre contas, porém, elas não devem ficar com valores negativos', () => {
   let response;
@@ -548,5 +545,155 @@ describe('4 - É possível realizar transferências gratuitas e ilimitadas entre
     })
 
   })
+
+});
+
+describe('5 - É possível encerrar uma conta', () => {
+  let response;
+
+  describe('Testa quando uma conta é encerrada com sucesso', () => {
+
+    before(async () => {
+      const accountMock1 = await chai.request(server)
+        .post('/register')
+        .send({
+          fullName: 'Albert Einstein',
+          cpf: '96375274222',
+        });
+
+      response = await chai.request(server)
+      .delete('/closure')
+      .send({
+        accountNumber: accountMock1.body.accountNumber,
+      })
+
+    });
+
+    it('Deve retornar o status 200', () => {
+      expect(response).to.have.status(200);
+    })
+
+    it('A requisição deve retornar a mensagem: `Account "accountNumber" has been closed sucessfully`', () => {
+      expect(response.body.message).to.contains(`has been closed sucessfully`);
+    })
+
+  });
+
+  describe('Testa quando tenta encerrar uma conta sem passar um accountNumber', () => {
+
+    before(async () => {
+      const accountMock1 = await chai.request(server)
+        .post('/register')
+        .send({
+          fullName: 'Albert Einstein',
+          cpf: '96375274222',
+        });
+
+      response = await chai.request(server)
+      .delete('/closure')
+      .send({})
+
+    });
+
+    it('Deve retornar o status 400', () => {
+      expect(response).to.have.status(400);
+    })
+
+    it('A requisição deve retornar a mensagem: You must set a account number', () => {
+      expect(response.body.message).to.be.equals('You must set a account number');
+    })
+
+  });
+
+  describe('Testa quando tenta encerrar uma conta passando um accountNumber inválido', () => {
+
+    before(async () => {
+      const accountMock1 = await chai.request(server)
+        .post('/register')
+        .send({
+          fullName: 'Albert Einstein',
+          cpf: '96375274111',
+        });
+
+      response = await chai.request(server)
+      .delete('/closure')
+      .send({
+        accountNumber: '999',
+      })
+
+    });
+
+    it('Deve retornar o status 400', () => {
+      expect(response).to.have.status(400);
+    })
+
+    it('A requisição deve retornar a mensagem: You must set a valid account number', () => {
+      expect(response.body.message).to.be.equals('You must set a valid account number');
+    })
+
+  });
+
+  describe('Testa quando tenta encerrar uma conta não cadastrada', () => {
+
+    before(async () => {
+      const accountMock1 = await chai.request(server)
+        .post('/register')
+        .send({
+          fullName: 'Albert Einstein',
+          cpf: '96375274222',
+        });
+
+      response = await chai.request(server)
+      .delete('/closure')
+      .send({
+        accountNumber: '123456789012345678901234',
+      })
+
+    });
+
+    it('Deve retornar o status 400', () => {
+      expect(response).to.have.status(400);
+    })
+
+    it('A requisição deve retornar a mensagem: You must set a exist account number.', () => {
+      expect(response.body.message).to.be.equals('You must set a exist account number.');
+    })
+
+  });
+
+  describe('Testa quando tenta encerrar uma conta que não foi zerada', () => {
+
+    before(async () => {
+      const accountMock1 = await chai.request(server)
+        .post('/register')
+        .send({
+          fullName: 'Albert Einstein',
+          cpf: '96375253222',
+        });
+
+      const depositMock = await chai.request(server)
+        .put('/deposit')
+        .send({
+          depositValue: 1,
+          accountDest: accountMock1.body.accountNumber,
+        })
+
+      response = await chai.request(server)
+      .delete('/closure')
+      .send({
+        accountNumber: accountMock1.body.accountNumber,
+      })
+
+    });
+
+    it('Deve retornar o status 400', () => {
+      expect(response).to.have.status(400);
+    })
+
+    it('A requisição deve retornar a mensagem: `You can not closure this account because there are "balance-value". Please, remove it all first`', () => {
+      expect(response.body.message).to.contains(`You can not closure this account because there are`);
+    })
+
+  });
 
 });
