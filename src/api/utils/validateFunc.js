@@ -41,10 +41,34 @@ const TransfValueValidate = (value) => {
   if(error) throw errHandle(400, 'Invalid amount. Only positive-values must be transfer');
 };
 
+const accountOrigValidate = async (accountOrig) => {
+  if(!accountOrig) throw errHandle(400, 'You must set a account number');
+  
+  const idOk = joi.string().length(24).required();
+  const { error } = idOk.validate(accountOrig);
+  if(error) throw errHandle(400, 'You must set a valid account origin number');
+
+  const accountExists = await searchById(accountOrig);
+  if(!accountExists) throw errHandle(400, 'You must set a exists account origin number');
+};
+
+const accountDestValidate = async (accountDest) => {
+  if(!accountDest) throw errHandle(400, 'You must set a account number');
+  
+  const idOk = joi.string().length(24).required();
+  const { error } = idOk.validate(accountDest);
+  if(error) throw errHandle(400, 'You must set a valid account destiny number');
+
+  const accountExists = await searchById(accountDest);
+  if(!accountExists) throw errHandle(400, 'You must set a exists account destiny number');
+};
+
 module.exports = {
   accAlreadyExists,
   accEntriesValidation,
   DepositEntriesValidate,
   TransfValueValidate,
   balanceAccountValidation,
+  accountOrigValidate,
+  accountDestValidate,
 };

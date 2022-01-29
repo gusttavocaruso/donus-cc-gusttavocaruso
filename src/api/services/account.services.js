@@ -1,7 +1,8 @@
 const { register, deposit, searchAccounts, transferBy,
-  transferTo } = require('../models/account.models');
-const { accAlreadyExists, accEntriesValidation, DepositEntriesValidate,
-  balanceAccountValidation, TransfValueValidate } = require('../utils/validateFunc');
+  transferTo, removeById } = require('../models/account.models');
+const { accAlreadyExists, accEntriesValidation, DepositEntriesValidate, accountOrigValidate,
+  balanceAccountValidation, TransfValueValidate, accountDestValidate,
+} = require('../utils/validateFunc');
 
 const accountRegister = async ({ fullName, cpf }) => {
   accEntriesValidation(fullName, cpf);
@@ -26,12 +27,19 @@ const newDepositService = async ({ depositValue, accountDest }) => {
   await deposit(depositValue, accountDest);
 };
 
-const transferService = async (id, transfValue, accountDest) => {
-  await balanceAccountValidation(id, transfValue);
+const transferService = async (accountOrig, transfValue, accountDest) => {
+  await accountOrigValidate(accountOrig);
+  await accountDestValidate(accountDest);
+
+  await balanceAccountValidation(accountOrig, transfValue);
   TransfValueValidate(transfValue);
 
-  await transferBy(transfValue, id);
+  await transferBy(transfValue, accountOrig);
   await transferTo(transfValue, accountDest);
+};
+
+const removeService = async (id) => {
+  await removeById(id);
 };
 
 module.exports = {
@@ -39,4 +47,5 @@ module.exports = {
   newDepositService,
   getAccountsService,
   transferService,
+  removeService,
 };

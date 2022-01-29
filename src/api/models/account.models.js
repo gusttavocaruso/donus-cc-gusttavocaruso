@@ -61,6 +61,12 @@ const transferBy = async (transfValue, id) => {
     );
 };
 
+const removeById = async (id) => {
+  const db = await connect();
+  await db.collection('accounts')
+    .deleteOne({ _id: ObjectId(id) });
+}
+
 module.exports = {
   register,
   searchByCpf,
@@ -69,4 +75,5 @@ module.exports = {
   transferTo,
   transferBy,
   searchById,
+  removeById,
 };

@@ -290,6 +290,7 @@ describe('4 - É possível realizar transferências gratuitas e ilimitadas entre
   let response;
 
   describe('Testa quando é realizado uma transferência válida', () => {
+
     before(async () => {
       const accountMock1 = await chai.request(server)
         .post('/register')
@@ -369,6 +370,178 @@ describe('4 - É possível realizar transferências gratuitas e ilimitadas entre
 
     it('A requisição deve retornar a mensagem: `You could not transfer "transfValue". Your account dont have this value`', () => {
       expect(response.body.message).to.contains(`Your account dont have this value`);
+    })
+
+  })
+
+  describe('Testa quando tenta realizar uma transferencia sem um numero de conta de origem válido', () => {
+
+    before(async () => {
+      const accountMock1 = await chai.request(server)
+        .post('/register')
+        .send({
+          fullName: 'Joey Tribbiani',
+          cpf: '96385274381',
+        });
+
+      const accountMock2 = await chai.request(server)
+        .post('/register')
+        .send({
+          fullName: 'Chandler Bing',
+          cpf: '14785236493',
+        });
+
+      const depositMock = await chai.request(server)
+        .put('/deposit')
+        .send({
+          depositValue: 10,
+          accountDest: accountMock1.body.accountNumber,
+        });
+
+      response = await chai.request(server)
+      .put(`/transfer/999`)
+      .send({
+        transfValue: 5,
+        accountDest: accountMock2.body.accountNumber,
+      })
+
+    });
+
+    it('Deve retornar o status 400', () => {
+      expect(response).to.have.status(400);
+    })
+
+    it('A requisição deve retornar a mensagem: You must set a valid account origin number', () => {
+      expect(response.body.message).to.be.equals('You must set a valid account origin number');
+    })
+
+  })
+
+  describe('Testa quando tenta realizar uma transferencia com um numero de conta de origem que não está cadastrado', () => {
+
+    before(async () => {
+      const accountMock1 = await chai.request(server)
+        .post('/register')
+        .send({
+          fullName: 'Joey Tribbiani',
+          cpf: '96385274381',
+        });
+
+      const accountMock2 = await chai.request(server)
+        .post('/register')
+        .send({
+          fullName: 'Chandler Bing',
+          cpf: '14785236493',
+        });
+
+      const depositMock = await chai.request(server)
+        .put('/deposit')
+        .send({
+          depositValue: 10,
+          accountDest: accountMock1.body.accountNumber,
+        });
+
+      response = await chai.request(server)
+      .put(`/transfer/123456789012345678901234`)
+      .send({
+        transfValue: 5,
+        accountDest: accountMock2.body.accountNumber,
+      })
+
+    });
+
+    it('Deve retornar o status 400', () => {
+      expect(response).to.have.status(400);
+    })
+
+    it('A requisição deve retornar a mensagem: You must set a exists account origin number', () => {
+      expect(response.body.message).to.be.equals('You must set a exists account origin number');
+    })
+
+  })
+
+  describe('Testa quando é realizado uma transferência sem um número de conta de destino válido', () => {
+
+    before(async () => {
+      const accountMock1 = await chai.request(server)
+        .post('/register')
+        .send({
+          fullName: 'Thiago Nigro',
+          cpf: '16385274128',
+        });
+
+      const accountMock2 = await chai.request(server)
+        .post('/register')
+        .send({
+          fullName: 'Clóvis de Barros F.',
+          cpf: '24785236973',
+        });
+
+      const depositMock = await chai.request(server)
+        .put('/deposit')
+        .send({
+          depositValue: 2000,
+          accountDest: accountMock1.body.accountNumber,
+        });
+
+      response = await chai.request(server)
+      .put(`/transfer/${accountMock1.body.accountNumber}`)
+      .send({
+        transfValue: 2000,
+        accountDest: '999',
+      })
+
+    });
+
+    it('Deve retornar o status 400', () => {
+      expect(response).to.have.status(400);
+    })
+
+    it('A requisição deve retornar a mensagem: You must set a valid account destiny number', () => {
+      expect(response.body.message).to.be.equals('You must set a valid account destiny number');
+    })
+
+  })
+
+  describe('Testa quando é realizado uma transferência com número de conta de destino não cadastrado', () => {
+
+    before(async () => {
+      const accountMock1 = await chai.request(server)
+        .post('/register')
+        .send({
+          fullName: 'Thiago Nigro',
+          cpf: '96385264128',
+        });
+
+      const accountMock2 = await chai.request(server)
+        .post('/register')
+        .send({
+          fullName: 'Clóvis de Barros F.',
+          cpf: '13785236973',
+        });
+
+      const depositMock = await chai.request(server)
+        .put('/deposit')
+        .send({
+          depositValue: 2000,
+          accountDest: accountMock1.body.accountNumber,
+        });
+
+      response = await chai.request(server)
+      .put(`/transfer/${accountMock1.body.accountNumber}`)
+      .send({
+        transfValue: 2000,
+        accountDest: '123456789012345678901234',
+      })
+
+    });
+
+    it('Deve retornar o status 400', () => {
+      expect(response).to.have.status(400);
+    })
+
+    it('A requisição deve retornar a mensagem: You must set a exists account destiny number', () => {
+      expect(response.body.message).to.be.equals('You must set a exists account destiny number');
     })
 
   })
