@@ -20,6 +20,27 @@ after(() => { mongodb.connect.restore() });
 describe('1 - fullName e cpf são obrigatórios para abrir uma conta: ', () => {
   let response;
 
+  describe('Testa quando são informados fullName e cpf em formatos válidos', () => {
+
+    before(async () => {
+      response = await chai.request(server)
+        .post('/register')
+        .send({
+          fullName: 'Mano Brown',
+          cpf: '98765432155'
+        });
+    });
+
+    it('Deve retornar o status 201', () => {
+      expect(response).to.have.status(201);
+    })
+
+    it('A requisição deve retornar a mensagem: Account has been created sucessfuly', () => {
+      expect(response.body.message).to.be.equals('Account has been created sucessfuly');
+    })
+
+  });
+
   describe('Testa quando não é informado um fullName', () => {
 
     before(async () => {
@@ -96,27 +117,6 @@ describe('1 - fullName e cpf são obrigatórios para abrir uma conta: ', () => {
 
   });
 
-  describe('Testa quando são informados fullName e cpf em formatos válidos', () => {
-
-    before(async () => {
-      response = await chai.request(server)
-        .post('/register')
-        .send({
-          fullName: 'Mano Brown',
-          cpf: '98765432155'
-        });
-    });
-
-    it('Deve retornar o status 201', () => {
-      expect(response).to.have.status(201);
-    })
-
-    it('A requisição deve retornar a mensagem: Account has been created sucessfuly', () => {
-      expect(response.body.message).to.be.equals('Account has been created sucessfuly');
-    })
-
-  })
-
 });
 
 describe('2 - Só é permitido uma conta por pessoa', () => {
@@ -139,7 +139,7 @@ describe('2 - Só é permitido uma conta por pessoa', () => {
     it('A requisição deve retornar a mensagem: Account has been created sucessfuly', () => {
       expect(response.body.message).to.be.equals('Account has been created sucessfuly');
     })
-  })
+  });
 
   describe('Testa quando um cpf já registrado tenta criar uma conta', () => {
 
@@ -199,7 +199,7 @@ describe('3 - É possível realizar depositos na conta. Por questão de seguran�
     it('A requisição deve retornar a mensagem: `Value "depositValue" has been deposited`', () => {
       expect(response.body.message).to.contains(`has been deposited`)
     })
-  })
+  });
 
   describe('Testa quando é realizado um depósito > R$2.000', () => {
 
@@ -227,7 +227,7 @@ describe('3 - É possível realizar depositos na conta. Por questão de seguran�
       expect(response.body.message).to.be.equals(`It is an invalid value to deposit. Only number-values under 2000 is allowed`);
     })
 
-  })
+  });
 
   describe('Testa quando não é informado um valor para depósito', () => {
 
@@ -254,7 +254,7 @@ describe('3 - É possível realizar depositos na conta. Por questão de seguran�
       expect(response.body.message).to.be.equals('depositValue must be informed')
     })
 
-  })
+  });
 
   describe('Testa quando não é informado uma conta para depósito', () => {
 
@@ -263,14 +263,13 @@ describe('3 - É possível realizar depositos na conta. Por questão de seguran�
       .post('/register')
       .send({
         fullName: 'M. S. Cortela',
-        cpf: '01234567899',
+        cpf: '01254567899',
       });
   
       response = await chai.request(server)
         .put('/deposit')
         .send({
-          depositValue: 2001,
-          accountDest: accountMock.body.accountNumber,
+          depositValue: 200
         });
     });
   
@@ -282,7 +281,59 @@ describe('3 - É possível realizar depositos na conta. Por questão de seguran�
       expect(response.body.message).to.be.equals('accountDest must be informed')
     })
 
-  })
+  });
+
+  describe('Testa quando é informado um valor inválido de conta para depósito', () => {
+    before(async () => {
+      const accountMock = await chai.request(server)
+      .post('/register')
+      .send({
+        fullName: 'L. F. Pondé',
+        cpf: '01234567800',
+      });
+  
+      response = await chai.request(server)
+        .put('/deposit')
+        .send({
+          depositValue: 2000,
+          accountDest: '9999',
+        });
+    });
+  
+    it('Deve retornar o status 400', () => {
+      expect(response).to.have.status(400);
+    })
+
+    it('A requisição deve retornar a mensagem: accountDest must be a valid account number', () => {
+      expect(response.body.message).to.be.equals('accountDest must be a valid account number')
+    })
+  });
+
+  describe('Testa quando é informado um valor de uma conta não cadastrada para depósito', () => {
+    before(async () => {
+      const accountMock = await chai.request(server)
+      .post('/register')
+      .send({
+        fullName: 'L. F. Pondé',
+        cpf: '01234567800',
+      });
+  
+      response = await chai.request(server)
+        .put('/deposit')
+        .send({
+          depositValue: 2000,
+          accountDest: '123456789012345678901234',
+        });
+    });
+  
+    it('Deve retornar o status 400', () => {
+      expect(response).to.have.status(400);
+    })
+
+    it('A requisição deve retornar a mensagem: You must set a exist account number.', () => {
+      expect(response.body.message).to.be.equals('You must set a exist account number.')
+    })
+  });
 
 });
 

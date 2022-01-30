@@ -22,7 +22,7 @@ Esse projeto não tem front-end, por isso, para acessar todas as rotas utilize u
 As rotas disponíveis são: /accounts, /register, /deposit, /transfer/:id e /closure
 
 ###  1. https://dg-cc-gustacaru.herokuapp.com/accounts - requisição HTTP: `GET` <br>
-  Essa rota retorna as contas registradas no banco de dados e exibe um array de objetos em um formato como:
+  Esse endpoint retorna as contas registradas no banco de dados e exibe um array de objetos em um formato como:
 
   ```json
     [
@@ -36,7 +36,7 @@ As rotas disponíveis são: /accounts, /register, /deposit, /transfer/:id e /clo
   ```
 
 ###  2. https://dg-cc-gustacaru.herokuapp.com/register - requisição HTTP: `POST` <br>
-  Essa rota 'abre uma nova conta'. Ela deve recer um JSON no formato:
+  Esse endpoint 'abre uma nova conta'. Ela deve recer um JSON no formato:
 
   ```json
     {
@@ -50,7 +50,7 @@ As rotas disponíveis são: /accounts, /register, /deposit, /transfer/:id e /clo
   <br><br>
 
 ###  3. https://dg-cc-gustacaru.herokuapp.com/deposit - requisição HTTP: `PUT` <br>
-  Essa rota cria um novo depósito em uma conta já existente e deve receber um JSON no formato:
+  Esse endpoint cria um novo depósito em uma conta já existente e deve receber um JSON no formato:
 
   ```json
     {
@@ -65,8 +65,8 @@ As rotas disponíveis são: /accounts, /register, /deposit, /transfer/:id e /clo
 
 
 ###  4. https://dg-cc-gustacaru.herokuapp.com/transfer/:id - requisição HTTP: `PUT` <br>
-  Essa rota possibilita a transferencia de valores entre contas existentes. <br>
-    A rota deve ser acessada substituindo o campo `/:id` da rota com o valor da "accountNumber" correspondente a conta que esta **transferindo para**. <br>
+  Esse endpoint possibilita a transferencia de valores entre contas existentes. <br>
+    A rota deve ser acessada substituindo o campo `/:id` com o valor da "accountNumber" correspondente a conta que esta **transferindo para**. <br>
     Ela deve receber um JSON no formato:
 
   ```json
@@ -82,7 +82,7 @@ As rotas disponíveis são: /accounts, /register, /deposit, /transfer/:id e /clo
   <br><br>
 
 ### 5. https://dg-cc-gustacaru.herokuapp.com/closure - requisição HTTP: `DELETE` <br>
-  Essa rota possibilita o encerramento de uma conta. A conta só pode ser encerrada **se ela tiver sem saldo**. <br>
+  Esse endpoint possibilita o encerramento de uma conta. A conta só pode ser encerrada **se ela tiver sem saldo**. <br>
   Ela deve receber um JSON no formato:
 
   ```json

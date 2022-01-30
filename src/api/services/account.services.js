@@ -22,7 +22,7 @@ const getAccountsService = async () => {
 }
 
 const newDepositService = async ({ depositValue, accountDest }) => {
-  DepositEntriesValidate(depositValue, accountDest);
+  await DepositEntriesValidate(depositValue, accountDest);
 
   await deposit(depositValue, accountDest);
 };
