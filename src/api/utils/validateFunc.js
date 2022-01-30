@@ -2,6 +2,12 @@ const joi = require('@hapi/joi');
 const errHandle = require('./errHandle');
 const { searchByCpf, searchById } = require('../models/account.models');
 
+const validAccountId = (id) => {
+  const idOk = joi.string().length(24).required();
+  const { error } = idOk.validate(id);
+  return error;
+}
+
 const accEntriesValidation = (fullName, cpf) => {
   const accSchema = joi.object({
     fullName: joi.string().required(),
@@ -24,9 +30,15 @@ const accAlreadyExists = async (cpf) => {
   if(ussCpf) throw errHandle(409, 'Cpf already registered');
 };
 
-const DepositEntriesValidate = (value, accountDest) => {
+const DepositEntriesValidate = async (value, accountDest) => {
   if(!value) throw errHandle(400, 'depositValue must be informed');
   if(!accountDest) throw errHandle(400, 'accountDest must be informed');
+
+  const erro = validAccountId(accountDest);
+  if(erro) throw errHandle(400, 'accountDest must be a valid account number');
+
+  const account = await searchById(accountDest);
+  if(!account) throw errHandle(400, 'You must set a exist account number.');
 
   const valueOk = joi.number().min(0).max(2000).required();
   const { error } = valueOk.validate(value);
@@ -40,12 +52,6 @@ const TransfValueValidate = (value) => {
   const { error } = valueOk.validate(value);
   if(error) throw errHandle(400, 'Invalid amount. Only positive-values must be transfer');
 };
-
-const validAccountId = (id) => {
-  const idOk = joi.string().length(24).required();
-  const { error } = idOk.validate(id);
-  return error;
-}
 
 const accountOrigValidate = async (accountOrig) => {
   if(!accountOrig) throw errHandle(400, 'You must set a account number');
