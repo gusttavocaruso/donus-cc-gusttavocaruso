@@ -263,14 +263,13 @@ describe('3 - É possível realizar depositos na conta. Por questão de seguran�
       .post('/register')
       .send({
         fullName: 'M. S. Cortela',
-        cpf: '01234567899',
+        cpf: '01254567899',
       });
   
       response = await chai.request(server)
         .put('/deposit')
         .send({
-          depositValue: 2001,
-          accountDest: accountMock.body.accountNumber,
+          depositValue: 200
         });
     });
   
